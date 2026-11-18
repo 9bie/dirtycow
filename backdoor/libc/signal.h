@@ -5,7 +5,16 @@
 #ifndef SCMAKER_SIGNAL_H
 #define SCMAKER_SIGNAL_H
 
-#include <bits/types/sigset_t.h>
+/*
+ * Define our own sigset type instead of using glibc's sigset_t/__sigset_t.
+ * Older glibc (e.g. CentOS 7) only provides __sigset_t via its internal
+ * <bits/sigset.h>, while newer glibc uses <bits/types/sigset_t.h>; both
+ * collide with definitions made here.  A private name avoids the clash.
+ * Layout matches glibc: 1024 bits.
+ */
+typedef struct {
+    unsigned long int __val[1024 / (8 * sizeof(unsigned long int))];
+} scmaker_sigset_t;
 
 #define SA_NOCLDSTOP  1
 #define SA_NOCLDWAIT  2
@@ -64,18 +73,18 @@ struct sigaction {
 
     void (*restorer)(void);
 
-    sigset_t mask;
+    scmaker_sigset_t mask;
 };
 
-int sigemptyset(sigset_t *);
+int sigemptyset(scmaker_sigset_t *);
 
-int sigfillset(sigset_t *);
+int sigfillset(scmaker_sigset_t *);
 
-int sigaddset(sigset_t *, int);
+int sigaddset(scmaker_sigset_t *, int);
 
-int sigdelset(sigset_t *, int);
+int sigdelset(scmaker_sigset_t *, int);
 
-int sigismember(const sigset_t *, int);
+int sigismember(const scmaker_sigset_t *, int);
 
 typedef void (*sighandler_t)(int);
 

